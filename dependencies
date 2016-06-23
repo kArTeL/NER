@@ -1,3 +1,6 @@
 ###### Dependencies ######
 nltk
 python-crfsuite
+# numpy
+SciPy
+scikit-learn
