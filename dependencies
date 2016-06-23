@@ -1,0 +1,3 @@
+###### Dependencies ######
+nltk
+python-crfsuite
