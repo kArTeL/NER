@@ -5,11 +5,13 @@ from sklearn.preprocessing import LabelBinarizer
 import sklearn
 import pycrfsuite
 
-# print(sklearn.__version__)
+
+##print test data files
 # print(nltk.corpus.conll2002.fileids())
 train_sents = list(nltk.corpus.conll2002.iob_sents('esp.train'))
 test_sents = list(nltk.corpus.conll2002.iob_sents('esp.testb'))
 
+## To print the first sentence of the corpus.
 # print(train_sents[0])
 def word2features(sent, i):
     word = sent[i][0]
@@ -63,4 +65,29 @@ def sent2labels(sent):
 def sent2tokens(sent):
     return [token for token, postag, label in sent]
 
-print (sent2features(train_sents[0])[0])
+#print (sent2features(train_sents[0])[0])
+#%%time
+X_train = [sent2features(s) for s in train_sents]
+y_train = [sent2labels(s) for s in train_sents]
+
+X_test = [sent2features(s) for s in test_sents]
+y_test = [sent2labels(s) for s in test_sents]
+
+#To train the model, we create pycrfsuite.Trainer,
+#load the training data and call 'train' method.
+#First, create pycrfsuite.Trainer and load the training data to CRFsuite:
+trainer = pycrfsuite.Trainer(verbose=False)
+
+for xseq, yseq in zip(X_train, y_train):
+    trainer.append(xseq, yseq)
+
+trainer.set_params({
+    'c1': 1.0,   # coefficient for L1 penalty
+    'c2': 1e-3,  # coefficient for L2 penalty
+    'max_iterations': 50,  # stop earlier
+
+    # include transitions that are possible, but not observed
+    'feature.possible_transitions': True
+})
+
+print(trainer.params())
