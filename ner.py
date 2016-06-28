@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import print_function
 from itertools import chain
 import nltk
@@ -8,14 +9,23 @@ import pycrfsuite
 from subprocess import call
 
 months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","setiembre","octubre","noviembre","diciembre"]
+srs = ["señora", "señor", "sr", "sra","sr.","sra."]
 
 def isMonth(text):
     lowerCaseText = text.lower()
+    return isInArray(lowerCaseText,months)
+
+
+def isSrSra(text):
+    lowerCaseText = text.lower()
+    return isInArray(lowerCaseText,srs)
+
+
+
+def isInArray(text, array):
     try:
-        wordIndex = months.index(lowerCaseText)
+        wordIndex = array.index(text)
     except ValueError:
-        return False
-    except AttributeError:
         return False
     return True
 
@@ -58,6 +68,7 @@ def word2features(sent, i):
             '-1:word.istitle=%s' % word1.istitle(),
             '-1:word.isupper=%s' % word1.isupper(),
             '-1:word.isdate=%s' % isMonth(word1),
+            #'-1:word.isdate=%s' % isSrSra(word1),
             '-1:postag=' + postag1,
             '-1:postag[:2]=' + postag1[:2],
         ])
@@ -109,7 +120,7 @@ for xseq, yseq in zip(X_train, y_train):
 trainer.set_params({
     'c1': 1.0,   # coefficient for L1 penalty
     'c2': 1e-3,  # coefficient for L2 penalty
-    'max_iterations': 50,  # stop earlier
+    'max_iterations': 100,  # stop earlier
 
     # include transitions that are possible, but not observed
     'feature.possible_transitions': True
