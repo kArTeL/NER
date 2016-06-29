@@ -28,6 +28,6 @@ def isInArray(text, array):
 # print(isMonth("2"))
 # print(isMonth("DICIEMBRE"))
 
-print(isSrSra("sra"))
-print(isSrSra("SRA."))
-print(isSrSra("SRA.asd"))
+# print(isSrSra("sra"))
+# print(isSrSra("SRA."))
+# print(isSrSra("SRA.asd"))
